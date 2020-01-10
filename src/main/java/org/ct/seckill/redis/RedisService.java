@@ -1,8 +1,6 @@
 package org.ct.seckill.redis;
 
 import com.alibaba.fastjson.JSON;
-import org.ct.seckill.common.SpringUtil;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,8 +10,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
-import javax.annotation.Resource;
-
 
 @Component
 @Configuration
@@ -21,7 +17,7 @@ import javax.annotation.Resource;
 @SpringBootTest
 public class RedisService {
 
-    @Resource(name = "jedisPool")
+    @Autowired
     private JedisPool jedisPool;
 
     public <T> T get(String key, Class<T> clazz) {
@@ -49,10 +45,10 @@ public class RedisService {
     }
 
     public <T> boolean set(String key, T value) {
-        JedisPool jedisPool = (JedisPool) SpringUtil.getBean("jedisPool");
+        //JedisPool jedisPool = (JedisPool) SpringUtil.getBean("jedisPool");
         Jedis jedis = null;
         try {
-            jedis = jedisPool.getResource();
+            jedis = this.jedisPool.getResource();
             String str = beanToString(value);
             if (str == null || str.length() <= 0) {
                 return false;

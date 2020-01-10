@@ -1,4 +1,4 @@
-package org.ct.seckill.common;
+package org.ct.seckill.util;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;

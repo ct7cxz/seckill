@@ -20,40 +20,74 @@ public class RedisService {
     @Autowired
     private JedisPool jedisPool;
 
-    public <T> T get(String key, Class<T> clazz) {
+    /**
+     * 获取键值
+     *
+     * @param keyPrefix
+     * @param key
+     * @param clazz
+     * @param <T>
+     * @return
+     */
+    public <T> T get(KeyPrefix keyPrefix, String key, Class<T> clazz) {
         Jedis jedis = null;
         try {
             jedis = jedisPool.getResource();
-            String str = jedis.get(key);
+            String realKey = keyPrefix.getPrefix() + key;
+            String str = jedis.get(realKey);
             return stringToBean(str, clazz);
         } finally {
             returnToPool(jedis);
         }
     }
 
+    /**
+     * 字符串转换成bean对象格式
+     * @param str
+     * @param clazz
+     * @param <T>
+     * @return
+     */
+    @SuppressWarnings("unchecked")
     private <T> T stringToBean(String str, Class<T> clazz) {
         if (str == null || str.length() <= 0 || clazz == null) {
             return null;
         } else if (clazz == String.class) {
             return (T) str;
         } else if (clazz == int.class || clazz == Integer.class) {
-            return (T) Integer.valueOf(str);
+            T t = (T) Integer.valueOf(str);
+            return t;
         } else if (clazz == long.class || clazz == Long.class) {
             return (T) Long.valueOf(str);
         } else
             return JSON.parseObject(str, clazz);
     }
 
-    public <T> boolean set(String key, T value) {
-        //JedisPool jedisPool = (JedisPool) SpringUtil.getBean("jedisPool");
+    /**
+     * 设置键值
+     *
+     * @param keyPrefix
+     * @param key
+     * @param value
+     * @param <T>
+     * @return
+     */
+    public <T> boolean set(KeyPrefix keyPrefix, String key, T value) {
         Jedis jedis = null;
         try {
             jedis = this.jedisPool.getResource();
+            String realKey = keyPrefix.getPrefix() + key;
             String str = beanToString(value);
             if (str == null || str.length() <= 0) {
                 return false;
             } else {
-                jedis.set(key, str);
+                int seconds = keyPrefix.expireSecond();
+                if (seconds <= 0) {
+                    jedis.set(realKey, str);
+                } else {
+                    jedis.setex(realKey, seconds, str);
+                }
+
                 return true;
             }
 
@@ -62,6 +96,12 @@ public class RedisService {
         }
     }
 
+    /**
+     * bean对象转换成字符串格式
+     * @param value
+     * @param <T>
+     * @return
+     */
     private <T> String beanToString(T value) {
         if (value == null) {
             return null;
@@ -78,6 +118,61 @@ public class RedisService {
     private void returnToPool(Jedis jedis) {
         if (jedis != null) {
             jedis.close();
+        }
+    }
+
+    /**
+     * 判断键值是否存在
+     *
+     * @param keyPrefix
+     * @param key
+     * @param <T>
+     * @return
+     */
+    public <T> boolean exists(KeyPrefix keyPrefix, String key) {
+        Jedis jedis = null;
+        try {
+            jedis = this.jedisPool.getResource();
+            String realKey = keyPrefix.getPrefix() + key;
+            return jedis.exists(realKey);
+        } finally {
+            returnToPool(jedis);
+        }
+    }
+
+    /**
+     * 增加一个键值
+     * @param keyPrefix
+     * @param key
+     * @param <T>
+     * @return
+     */
+    public <T> Long incr(KeyPrefix keyPrefix, String key) {
+        Jedis jedis = null;
+        try {
+            jedis = this.jedisPool.getResource();
+            String realKey = keyPrefix.getPrefix() + key;
+            return jedis.incr(realKey);
+        } finally {
+            returnToPool(jedis);
+        }
+    }
+
+    /**
+     * 删除一个键值
+     * @param keyPrefix
+     * @param key
+     * @param <T>
+     * @return
+     */
+    public <T> Long decr(KeyPrefix keyPrefix, String key) {
+        Jedis jedis = null;
+        try {
+            jedis = this.jedisPool.getResource();
+            String realKey = keyPrefix.getPrefix() + key;
+            return jedis.decr(realKey);
+        } finally {
+            returnToPool(jedis);
         }
     }
 

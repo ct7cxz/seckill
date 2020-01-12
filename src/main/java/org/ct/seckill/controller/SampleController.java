@@ -3,6 +3,9 @@ package org.ct.seckill.controller;
 import org.ct.seckill.domain.User;
 //import org.ct.seckill.redis.RedisService;
 import org.ct.seckill.redis.RedisService;
+import org.ct.seckill.redis.UserKey;
+import org.ct.seckill.result.MsgCode;
+import org.ct.seckill.result.Result;
 import org.ct.seckill.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachePut;
@@ -49,14 +52,19 @@ public class SampleController {
         User user = new User();
         user.setId(1);
         user.setName("haha");
-        redisService.set("keys", user);
+        redisService.set(UserKey.getById,  "1", user);
     }
 
     @RequestMapping(path = "/get")
     @ResponseBody
-    public User getRedis(){
-        User user = redisService.get("keys", User.class);
-        System.out.println(user);
-        return user;
+    public Result getRedis() {
+        User user = redisService.get(UserKey.getById,  "1", User.class);
+        return new Result().success(user);
+    }
+
+    @ResponseBody
+    @RequestMapping(path = "/error")
+    public Result testError(){
+        return new Result<>().error(MsgCode.ERROR_ORDER);
     }
 }

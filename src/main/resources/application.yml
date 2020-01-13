@@ -59,7 +59,7 @@ redis:
 # mybatis
 mybatis:
   mapper-locations: classpath:mappers/*.xml
-  type-aliases-package: org.ct.seckill.domain
+  type-aliases-package: org.ct.seckill.domain,org.ct.seckill.dto
   configuration:
     map-underscore-to-camel-case: true
 

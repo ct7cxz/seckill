@@ -1,10 +1,14 @@
 package org.ct.seckill.service;
 
+import org.ct.seckill.domain.MiaoshaUser;
 import org.ct.seckill.dto.LoginDto;
-import org.ct.seckill.result.MsgCode;
+
+import javax.servlet.http.HttpServletResponse;
 
 public interface IMiaoshaUserService {
-    MsgCode isUserExists(LoginDto loginDto);
+    MiaoshaUser isUserExists(HttpServletResponse response, LoginDto loginDto);
 
     boolean getById(LoginDto loginDto);
+
+    MiaoshaUser getUserByToken(HttpServletResponse response, String token);
 }

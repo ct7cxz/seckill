@@ -18,9 +18,9 @@ function doLogin(){
         },
         success : function(data){
             layer.closeAll();
-            if(data.code == 0){
+            if(data.code == 200){
                 layer.msg("登录成功",{time: 1000},function(){
-                    window.location.href="/goods/to_list";
+                    window.location.href="/seckill/goods/to_list";
                 });
             }else{
                 alert(data.msg);

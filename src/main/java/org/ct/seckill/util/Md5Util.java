@@ -40,7 +40,7 @@ public class Md5Util {
     }
 
     public static void main(String[] args) {
-        System.out.println(formPassToDBPass("1d5065000b5cf8123a271764a00f3523","1a2b3c4d"));
+        System.out.println(1578927618000l-1578926618659l);
     }
 
 }

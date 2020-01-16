@@ -1,7 +1,9 @@
 package org.ct.seckill.controller;
 
+import org.ct.seckill.domain.MiaoshaUser;
 import org.ct.seckill.domain.User;
 //import org.ct.seckill.redis.RedisService;
+import org.ct.seckill.dto.GoodsDto;
 import org.ct.seckill.redis.RedisService;
 import org.ct.seckill.redis.UserKey;
 import org.ct.seckill.result.MsgCode;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
@@ -52,19 +55,26 @@ public class SampleController {
         User user = new User();
         user.setId(1);
         user.setName("haha");
-        redisService.set(UserKey.getById,  "1", user);
+        redisService.set(UserKey.getById, "1", user);
     }
 
     @RequestMapping(path = "/get")
     @ResponseBody
     public Result getRedis() {
-        User user = redisService.get(UserKey.getById,  "1", User.class);
+        User user = redisService.get(UserKey.getById, "1", User.class);
         return new Result().success(user);
     }
 
     @ResponseBody
     @RequestMapping(path = "/error")
-    public Result testError(){
+    public Result testError() {
         return new Result<>().error(MsgCode.ERROR_ORDER);
     }
+
+    @RequestMapping(path = "/to_detail", method = RequestMethod.GET)
+    @ResponseBody
+    public <T> Result<T> toGoodsDetail(MiaoshaUser miaoshaUser) {
+        return (Result<T>) new Result<T>().success(miaoshaUser);
+    }
+
 }

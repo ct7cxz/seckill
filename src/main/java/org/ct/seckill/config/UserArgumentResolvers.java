@@ -50,6 +50,9 @@ public class UserArgumentResolvers implements HandlerMethodArgumentResolver {
     private String getUserByCookie(HttpServletRequest request) {
         //获取所有的cookie信息，从中取到token的值
         Cookie[] cookies = request.getCookies();
+        if(cookies == null) {
+            return null;
+        }
         for (Cookie cookie : cookies) {
             String cookieName = cookie.getName();
             if (cookieName .equals(MiaoshaUserServiceImpl.COOKIE_NAME) ) {

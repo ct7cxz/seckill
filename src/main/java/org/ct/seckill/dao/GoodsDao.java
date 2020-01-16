@@ -14,4 +14,7 @@ public interface GoodsDao {
     List<GoodsDto> getGoodsDtoList();
 
     GoodsDto findGoodsById(GoodsDto goodsDto);
+
+    Integer updateMiaoshaGoods(GoodsDto goodsDto);
+
 }

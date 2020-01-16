@@ -47,15 +47,15 @@
                     <strong id="second_show">0秒</strong>
                 </span>
                 <span th:if="${miaoshaStaus == 2}">秒杀已结束</span>
-                <!--秒杀剩余时间-->
-                <input type="hidden" th:value="${miaoshaCountdown} " id="miaoshaCountdown">
-                <!--秒杀倒计时开始时间-->
-                <input type="hidden" th:value="${countdownStart} " id="countdownStart">
             </td>
             <td>
-                <form id="miaoshaForm" method="post" action="/miaosha/do_miaosha">
+                <form id="miaoshaForm" method="post" action="/seckill/miaosha/do_miaosha">
+                    <!--秒杀剩余时间-->
+                    <input type="hidden" th:value="${miaoshaCountdown} " id="miaoshaCountdown" name="miaoshaCountdown">
+                    <!--秒杀倒计时开始时间-->
+                    <input type="hidden" th:value="${countdownStart} " id="countdownStart">
                     <button class="btn btn-primary btn-block" type="submit" id="buyButton">立即秒杀</button>
-                    <input type="hidden" name="goodsId" th:value="${goods.id}"/>
+                    <input type="hidden" name="id" th:value="${goods.id}"/>
                 </form>
             </td>
         </tr>

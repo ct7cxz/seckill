@@ -15,4 +15,8 @@
         where goods.id = miaosha_goods.goods_id and goods.id = #{id};
     </select>
 
+    <update id="updateMiaoshaGoods">
+        update miaosha_goods g set g.stock_count = g.stock_count-1 where g.goods_id = #{id};
+    </update>
+
 </mapper>

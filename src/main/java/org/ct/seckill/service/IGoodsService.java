@@ -8,4 +8,6 @@ public interface IGoodsService {
     List<GoodsDto> getGoodsDtoList();
 
     GoodsDto findGoodsById(GoodsDto goodsDto);
+
+    Integer updateMiaoshaGoods(GoodsDto goodsDto);
 }

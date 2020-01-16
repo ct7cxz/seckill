@@ -14,6 +14,7 @@ public class GlobalExceptionHandler<T> {
 
     @ExceptionHandler(value = Exception.class)
     public Result<T> exceptionHandler(HttpServletRequest request, Exception e) {
+        e.printStackTrace();
         if (e instanceof GlobalException) {
             GlobalException ex = (GlobalException) e;
             MsgCode mc = ex.getMc();
